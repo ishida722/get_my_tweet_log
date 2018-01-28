@@ -2,7 +2,6 @@ import secret
 import twitter
 import sys
 from datetime import datetime, timezone, timedelta, date
-from EsDataConverter.EsDataConverter import Converter
 from elasticsearch import Elasticsearch
 import os
 
