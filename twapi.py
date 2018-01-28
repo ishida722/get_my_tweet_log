@@ -47,23 +47,5 @@ def GetYesterdayTweets():
                 break
     return retTweets
 
-def main():
-    tw = API()
-    nowCount = 0
-    nowEndId = None
-    with open('tweets.csv', 'w') as f:
-        f.write('timestamp, tweet\n')
-        while True:
-            rawResult = tw.api.GetUserTimeline(screen_name=SCREEN_NAME, count=COUNT, max_id=nowEndId)
-            if not rawResult: sys.exit()
-            nowCount = nowCount + COUNT
-            for status in rawResult:
-                if not IsItToday(status): sys.exit()
-                time = GetDateTimeStr(status.created_at)
-                txt = status.text.replace('\n', '')
-                f.write('{}, "{}"\n'.format(time, txt))
-            print(nowCount)
-            nowEndId = rawResult[-1].id - 1
-
 if __name__ == '__main__':
     print(GetYesterdayTweets())
