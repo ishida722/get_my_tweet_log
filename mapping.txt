@@ -1,0 +1,19 @@
+PUT twitter
+{
+    "mappings": {
+        "my_timeline": {
+            "properties": {
+                "date": {
+                    "type":   "date",
+                    "format": "yyyyMMdd'T'HHmmssZ"
+                },
+                "usr": {
+                    "type": "text"
+                },
+                "text": {
+                    "type": "text"
+                }
+            }
+        }
+    }
+}
