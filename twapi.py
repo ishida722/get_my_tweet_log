@@ -49,7 +49,7 @@ def IndexYesterdayTweets
     es  = Elasticsearch(os.getenv('ES_SERVER', 'http://localhost:9200'))
     for tweet in tweets:
         res = es.index(index='twitter', doc_type='my_timeline', body=tweet)
-        return res
+    return res
 
 if __name__ == '__main__':
     result = IndexYesterdayTweets()
