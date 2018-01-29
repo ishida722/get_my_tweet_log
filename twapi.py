@@ -17,19 +17,10 @@ class API:
             access_token_secret=secret.TWITTER_ACCESS_TOKEN_SECRET
             )
 
-def GetDateTime(time):
-    time = datetime.strptime(time, '%a %b %d %H:%M:%S %z %Y')
-    time = time.astimezone(JST)
-    return time
-
-def GetDateTimeStr(time):
-    time = GetDateTime(time)
-    return time.strftime('%Y-%m-%dT%H:%M:%SZ')
-
 def HowManyDaysAgo(tweet):
     today = datetime.now(JST).date()
-    time = GetDateTime(tweet.created_at).date()
-    return (today - time).days
+    created = datetime.fromtimestamp(tweet.created_at_in_seconds, JST).date()
+    return (today - created).days
 
 def GetDateStr(created_at_in_seconds):
     date = datetime.fromtimestamp(created_at_in_seconds, JST)
@@ -53,9 +44,13 @@ def GetYesterdayTweets():
                 break
     return retTweets
 
-if __name__ == '__main__':
+def IndexYesterdayTweets
     tweets = GetYesterdayTweets()
     es  = Elasticsearch(os.getenv('ES_SERVER', 'http://localhost:9200'))
     for tweet in tweets:
         res = es.index(index='twitter', doc_type='my_timeline', body=tweet)
-        print(res)
+        return res
+
+if __name__ == '__main__':
+    result = IndexYesterdayTweets()
+    print(result)
