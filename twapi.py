@@ -24,7 +24,7 @@ def HowManyDaysAgo(tweet):
 
 def GetDateStr(created_at_in_seconds):
     date = datetime.fromtimestamp(created_at_in_seconds, JST)
-    dateStr = date.strftime('%Y%m%dT%H%M%SZ')
+    dateStr = date.strftime('%Y-%m-%dT%H:%M:%S+09:00')
     return dateStr
 
 def GetYesterdayTweets():
@@ -44,13 +44,22 @@ def GetYesterdayTweets():
                 break
     return retTweets
 
-def IndexYesterdayTweets
+def IndexYesterdayTweets():
     tweets = GetYesterdayTweets()
     es  = Elasticsearch(os.getenv('ES_SERVER', 'http://localhost:9200'))
     for tweet in tweets:
-        res = es.index(index='twitter', doc_type='my_timeline', body=tweet)
+        res = es.index(index='twitter', doc_type='tweet', body=tweet)
     return res
 
 if __name__ == '__main__':
-    result = IndexYesterdayTweets()
+    import argparse
+    parser = argparse.ArgumentParser(description='Get tweetlog')
+    parser.add_argument('-p', '--print', action='store_true',  help='print only')
+    args = parser.parse_args()
+
+    if args.print:
+        result = GetYesterdayTweets()
+    else:
+        result = IndexYesterdayTweets()
+
     print(result)
