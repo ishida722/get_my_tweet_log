@@ -37,8 +37,8 @@ def GetYesterdayTweets():
         for tweet in rawResult:
             days = HowManyDaysAgo(tweet)
             nowEndId = tweet.id
-            if days == 1: #Yesteday
-                retTweets.append({'usr':tweet.user.screen_name, 'date':GetDateStr(tweet.created_at_in_seconds), 'text':tweet.text})
+            if days == 1 or tweet.retweeted == True : #Yesteday
+                retTweets.append({'user':tweet.user.screen_name, 'date':GetDateStr(tweet.created_at_in_seconds), 'text':tweet.text})
             elif days > 1:
                 isTweetTodayOrYesterday = False
                 break
@@ -49,7 +49,13 @@ def IndexYesterdayTweets():
     es  = Elasticsearch(os.getenv('ES_SERVER', 'http://localhost:9200'))
     for tweet in tweets:
         res = es.index(index='twitter', doc_type='tweet', body=tweet)
+        print(res)
     return res
+
+def PrintYesterdayTweet():
+    tweets = GetYesterdayTweets()
+    for tw in tweets:
+        print('{} : {} : {}'.format(tw['user'], tw['text'], tw['date']))
 
 if __name__ == '__main__':
     import argparse
@@ -57,9 +63,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--print', action='store_true',  help='print only')
     args = parser.parse_args()
 
-    if args.print:
-        result = GetYesterdayTweets()
+    if args.print: # -p --print option
+        PrintYesterdayTweet()
     else:
-        result = IndexYesterdayTweets()
-
-    print(result)
+        IndexYesterdayTweets()
